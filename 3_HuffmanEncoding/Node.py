@@ -1,24 +1,31 @@
-class Node:
-    def __init__(self, value, left, right):
-        self.value = value
-        self.left = left  # could be tuple or Node
-        self.right = right  # could be tuple or Node
+import json
+
+
+def initNode(value, left, right):
+    node = {}
+    node['value'] = value
+    node['left'] = left
+    node['right'] = right
+    return node
+
+
+def prettyPrintNode(dict):
+    json.dumps(dict, sort_keys=True, indent=4)
 
 
 def createOneNode(left, right):
     total_value = 0
-
     if type(left) == tuple:
         total_value += left[1]
     else:
-        total_value += left.value
+        total_value += left['value']
 
     if type(right) == tuple:
         total_value += right[1]
     else:
-        total_value += right.value
+        total_value += right['value']
 
-    node = Node(total_value, left, right)
+    node = initNode(total_value, left, right)
     return node
 
 

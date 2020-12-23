@@ -1,6 +1,6 @@
 
 import sys
-from Node import Node, createOneNode, createNodesFromList
+from Node import initNode, createOneNode, createNodesFromList, prettyPrintNode
 
 
 def huffman_encoding(str):
@@ -22,10 +22,14 @@ def huffman_encoding(str):
     # 3.Pop-out two nodes with the minimum frequency from the priority queue created in the above step.
     max_2 = ordered_list[-2:]
     max_node = createOneNode(max_2[0], max_2[1])
-    print('max_node', max_node)
     rest = ordered_list[0:-2]
-    print(createNodesFromList(rest))
-    # 4.create
+    rest_node = createNodesFromList(rest)
+
+    # 4.combine rest_node and max_node
+    final_node = createOneNode(rest_node, max_node)
+    print('final_node', final_node)
+
+    # 5. traverse from root
 
 
 def huffman_decoding(data, tree):
