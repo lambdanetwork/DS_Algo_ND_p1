@@ -44,3 +44,29 @@ def recursiveCreateNode(node, arr):
     tupl = arr.pop(0)
     new_node = createOneNode(node, tupl)
     return recursiveCreateNode(new_node, arr)
+
+
+def encodeTree(node):
+    dict_char_huffmanCode = {}
+
+    def walkRight(node, address):
+        address += '1'
+        if type(node) == tuple:
+            dict_char_huffmanCode[node[0]] = address
+        else:
+            # it's a node with left and right
+            walkLeft(node['left'], address)
+            walkRight(node['right'], address)
+
+    def walkLeft(node, address):
+        address += '0'
+        if type(node) == tuple:
+            dict_char_huffmanCode[node[0]] = address
+        else:
+            # it's a node with left and right
+            walkLeft(node['left'], address)
+            walkRight(node['right'], address)
+
+    walkLeft(node['left'], '')
+    walkRight(node['right'], '')
+    return dict_char_huffmanCode

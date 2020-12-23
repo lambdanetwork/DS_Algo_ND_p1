@@ -1,6 +1,6 @@
 
 import sys
-from Node import initNode, createOneNode, createNodesFromList, prettyPrintNode
+from Node import initNode, createOneNode, createNodesFromList, encodeTree
 
 
 def huffman_encoding(str):
@@ -27,14 +27,20 @@ def huffman_encoding(str):
 
     # 4.combine rest_node and max_node
     final_node = createOneNode(rest_node, max_node)
-    print('final_node', final_node)
 
     # 5. traverse from root
+    dict_char_code = encodeTree(final_node)
+    encoded_string = ''
+    for char in str:
+        encoded_string += dict_char_code[char]
+    return (encoded_string, final_node)
 
 
 def huffman_decoding(data, tree):
     pass
 
+
+huffman_encoding('AAAAAAABBBCCCCCCCDDEEEEEE')
 
 if __name__ == "__main__":
     codes = {}
