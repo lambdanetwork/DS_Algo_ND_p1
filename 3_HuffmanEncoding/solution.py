@@ -1,6 +1,6 @@
 
 import sys
-from Node import initNode, createOneNode, createNodesFromList, encodeTree
+from Node import createOneNode, createNodesFromList, encodeTree
 
 
 def huffman_encoding(str):
@@ -37,10 +37,32 @@ def huffman_encoding(str):
 
 
 def huffman_decoding(data, tree):
-    pass
+    decoded_string = ''
+    current_node = tree
 
+    def decodeByNode(char, node):
+        if char == '0':
+            if type(node['left']) == tuple:
+                return node['left'][0]
+            else:
+                return node['left']
+        else:
+            if type(node['right']) == tuple:
+                return node['right'][0]
+            else:
+                return node['right']
 
-huffman_encoding('AAAAAAABBBCCCCCCCDDEEEEEE')
+    for char in data:
+        decoded = decodeByNode(char, current_node)
+        if type(decoded) == dict:
+            current_node = decoded
+        else:
+            # get the data, restart from tree
+            decoded_string += decoded
+            current_node = tree
+
+    return decoded_string
+
 
 if __name__ == "__main__":
     codes = {}
