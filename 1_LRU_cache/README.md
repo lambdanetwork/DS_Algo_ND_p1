@@ -5,6 +5,8 @@
 
 ## Analysis
 1. Time complexity is **O(1)** 
+2. Space complexity is **O(n)** using dictionary
+
 2. To achieve constant complexity, we need to store it in dictionary.
    - accessing value in dictionary is O(1)
 3. However key in dictionary is unordered, perhaps if python has Map() which has ordered key
