@@ -9,9 +9,9 @@ def checkListSizes(llist_1, llist_2):
     if llist1_size == 0 and llist2_size == 0:
         return answer_llist
     elif llist1_size == 0 and llist2_size > 0:
-        return llist2_size
+        return llist_2
     elif llist1_size > 0 and llist2_size == 0:
-        return llist1_size
+        return llist_1
     else:
         return None
 
@@ -113,12 +113,26 @@ class Testing(unittest.TestCase):
         self.assertEqual(answer.size(), 0)
 
     def testEmptyList(self):
-        # Test case 2
         linked_list_1 = LinkedList()
         linked_list_2 = LinkedList()
 
-        print(union(linked_list_1, linked_list_2))
-        print(intersection(linked_list_1, linked_list_2))
+        answer = union(linked_list_1, linked_list_2)
+        self.assertEqual(answer.size(), 0)
+        answer = intersection(linked_list_1, linked_list_2)
+        self.assertEqual(answer.size(), 0)
+
+    def testOneEmptyList(self):
+        linked_list_1 = LinkedList()
+        linked_list_2 = LinkedList()
+
+        element_1 = [3, 2, 4, 35, 6, 65, 6, 4, 3, 23]
+        for i in element_1:
+            linked_list_1.append(i)
+
+        answer = union(linked_list_1, linked_list_2)
+        self.assertEqual(answer.size(), len(element_1))
+        answer = intersection(linked_list_1, linked_list_2)
+        self.assertEqual(answer.size(), len(element_1))
 
 
 if __name__ == "__main__":
