@@ -1,5 +1,6 @@
 from Block import Block
 import time
+import unittest
 
 
 class Blockchain:
@@ -35,8 +36,39 @@ class Blockchain:
         loop_block(self.blocks)
 
 
-blockchain = Blockchain()
-blockchain.addBlock('First block')
-blockchain.addBlock('Second block')
-blockchain.addBlock('Third block')
-blockchain.logAllBlock()
+# Unit test
+class Testing(unittest.TestCase):
+    def testGenesisBlock(self):
+        blockchain = Blockchain()
+        self.assertEqual(blockchain.blocks.data, "This is Genesis Block")
+        self.assertEqual(blockchain.size, 1)
+        self.assertEqual(blockchain.last_hash, blockchain.blocks.hash)
+
+    def testNegativeCaseData(self):
+        blockchain = Blockchain()
+        blockchain.addBlock('First block')
+        blockchain.addBlock('Second block')
+        blockchain.addBlock('Third block')
+        self.assertNotEqual(blockchain.blocks.next.data, 'Second block')
+        self.assertNotEqual(blockchain.blocks.next.next.data, 'Third block')
+
+    def testBlockchainDataIsAccurate(self):
+        blockchain = Blockchain()
+        blockchain.addBlock('First block')
+        blockchain.addBlock('Second block')
+        blockchain.addBlock('Third block')
+        self.assertEqual(blockchain.blocks.next.data, 'First block')
+        self.assertEqual(blockchain.blocks.next.next.data, 'Second block')
+        self.assertEqual(blockchain.blocks.next.next.next.data, 'Third block')
+
+    def testBlockchainHashIsAccurate(self):
+        blockchain = Blockchain()
+        blockchain.addBlock('First block')
+        blockchain.addBlock('Second block')
+        blockchain.addBlock('Third block')
+        self.assertEqual(
+            blockchain.last_hash, blockchain.blocks.next.next.hash)
+
+
+if __name__ == "__main__":
+    unittest.main()
