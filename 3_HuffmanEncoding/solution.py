@@ -15,7 +15,6 @@ def huffman_encoding(string):
             frequency_dict[char] += 1
         else:
             frequency_dict[char] = 1
-    print(frequency_dict)
 
     def takeSecond(tuple):
         return tuple[1]

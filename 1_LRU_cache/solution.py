@@ -1,4 +1,8 @@
+import unittest
+
 # double linkedlist
+
+
 class Node:
     def __init__(self, key, value):
         # store key and value, so we can remove from data::Dict
@@ -9,8 +13,9 @@ class Node:
 
 
 class LRU_Cache:
-
     def __init__(self, capacity):
+        if capacity <= 0:
+            raise Exception("Provide a value bigger than 0")
         self.size = 0
         self.capacity = capacity
         self.head = None
@@ -74,21 +79,55 @@ class LRU_Cache:
         self.data[key] = self.head
 
 
-our_cache = LRU_Cache(5)
+class Testing(unittest.TestCase):
+    def testWithCapacity0(self):
+        with self.assertRaises(Exception):
+            our_cache = LRU_Cache(0)
 
-our_cache.set(1, 1)
-our_cache.set(2, 2)
-our_cache.set(3, 3)
-our_cache.set(4, 4)
-our_cache.log()  # 4 becomes the head, while 1 becomes the tail
+    def testOrderOfQueue(self):
+        our_cache = LRU_Cache(5)
 
-our_cache.get(1)       # returns 1
-our_cache.get(2)       # returns 2
-print(our_cache.get(9))      # returns -1 because 9 is not present in the cache
-our_cache.log()  # 2 becomes the head, while 3 becomes the tail
+        our_cache.set(1, 1)
+        our_cache.set(2, 2)
+        our_cache.set(3, 3)
+        our_cache.set(4, 4)
+        self.assertEqual(our_cache.head.value, 4)
+        self.assertEqual(our_cache.tail.value, 1)
 
-our_cache.set(5, 5)
-our_cache.set(6, 6)
+    def testGetValue(self):
+        our_cache = LRU_Cache(5)
 
-our_cache.get(3)
-our_cache.log()  # 6 becomes the head, while 4 becomes the tail
+        our_cache.set(1, 1)
+        our_cache.set(2, 2)
+        our_cache.set(3, 3)
+        our_cache.set(4, 4)
+        answer1 = our_cache.get(1)       # returns 1
+        asswer2 = our_cache.get(2)       # returns 2
+        self.assertEqual(answer1, 1)
+        self.assertEqual(asswer2, 2)
+
+        # 2 becomes the head, while 3 becomes the tail
+        self.assertEqual(our_cache.head.value, 2)
+        self.assertEqual(our_cache.tail.value, 3)
+
+    def testNotFoundValue(self):
+        our_cache = LRU_Cache(5)
+        our_cache.set(1, 1)
+
+        answer = our_cache.get(9)
+        self.assertEqual(answer, -1)
+
+    def testMaxCapacity(self):
+        our_cache = LRU_Cache(5)
+
+        our_cache.set(1, 1)
+        our_cache.set(2, 2)
+        our_cache.set(3, 3)
+        our_cache.set(4, 4)
+        our_cache.set(5, 5)
+        our_cache.set(6, 6)
+        self.assertEqual(our_cache.capacity, 5)
+
+
+if __name__ == "__main__":
+    unittest.main()
