@@ -16,27 +16,41 @@ def huffman_encoding(string):
         else:
             frequency_dict[char] = 1
 
+    # ordering list
     def takeSecond(tuple):
         return tuple[1]
     ordered_list = [(k, v)
                     for k, v in frequency_dict.items()]
     ordered_list.sort(key=takeSecond)
 
-    # 3.Pop-out two nodes with the minimum frequency from the priority queue created in the above step.
-    max_2 = ordered_list[-2:]
-    max_node = createOneNode(max_2[0], max_2[1])
-    rest = ordered_list[0:-2]
-    rest_node = createNodesFromList(rest)
+    # edge case
+    if len(ordered_list) == 1:
+        char = ordered_list[0][0]
+        frequency = frequency_dict[char]
+        encodedString = ''
+        for x in range(0, frequency):
+            encodedString += '0'
+        return (encodedString, {'left': ordered_list[0], 'value': '0'})
 
-    # 4.combine rest_node and max_node
-    final_node = createOneNode(rest_node, max_node)
+    FINAL_NODE = None
+    if len(ordered_list) > 1 and len(ordered_list) <= 3:
+        FINAL_NODE = createNodesFromList(ordered_list)
+    else:
+        # 3.Pop-out two nodes with the minimum frequency from the priority queue created in the above step.
+        max_2 = ordered_list[-2:]
+        max_node = createOneNode(max_2[0], max_2[1])
+        rest = ordered_list[0:-2]
+        rest_node = createNodesFromList(rest)
+
+        # 4.combine rest_node and max_node
+        FINAL_NODE = createOneNode(rest_node, max_node)
 
     # 5. traverse from root
-    dict_char_code = encodeTree(final_node)
+    dict_char_code = encodeTree(FINAL_NODE)
     encoded_string = ''
     for char in string:
         encoded_string += dict_char_code[char]
-    return (encoded_string, final_node)
+    return (encoded_string, FINAL_NODE)
 
 
 def huffman_decoding(data, tree):
@@ -44,6 +58,8 @@ def huffman_decoding(data, tree):
         raise Exception("Provide String with length > 0")
     if type(tree) != dict:
         raise TypeError("Provide a tree with Dict type")
+    if len(data) == 1:
+        return tree['value']
 
     decoded_string = ''
     current_node = tree
@@ -108,6 +124,27 @@ class Testing(unittest.TestCase):
 
         with self.assertRaises(Exception):
             decoded_data = huffman_decoding(data, 'should be dict')
+
+    def testRepeatedSingleCharacter(self):
+        text = 'AAA'
+        encoded_data, tree = huffman_encoding(text)
+        decoded_data = huffman_decoding(encoded_data, tree)
+
+        self.assertEqual(decoded_data, text)
+
+    def testRepeatedSingleCharacter(self):
+        text = 'AAABBB'
+        encoded_data, tree = huffman_encoding(text)
+        decoded_data = huffman_decoding(encoded_data, tree)
+
+        self.assertEqual(decoded_data, text)
+
+    def testRepeatedSingleCharacter(self):
+        text = 'AAABBBCCC'
+        encoded_data, tree = huffman_encoding(text)
+        decoded_data = huffman_decoding(encoded_data, tree)
+
+        self.assertEqual(decoded_data, text)
 
 
 if __name__ == "__main__":
