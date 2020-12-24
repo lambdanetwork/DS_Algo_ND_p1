@@ -1,3 +1,6 @@
+from Group import Group
+
+
 def is_user_in_group(user, group):
     """
     Return True if user is in the group, False otherwise.
@@ -6,6 +9,12 @@ def is_user_in_group(user, group):
       user(str): user name/id
       group(class:Group): group to check user membership against
     """
+    if type(user) != str or len(user) <= 0:
+        raise Exception("Provide a valid user to search")
+
+    if not isinstance(group, Group):
+        raise Exception("Provide a group object on second argument")
+
     answer = False
     answer = loopSearch(user, group)
     return answer
