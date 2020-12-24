@@ -1,12 +1,16 @@
 
 import sys
+import unittest
 from Node import createOneNode, createNodesFromList, encodeTree
 
 
-def huffman_encoding(str):
+def huffman_encoding(string):
+    if type(string) != str or len(string) == 0:
+        raise Exception("Provide String with length > 0")
+
     frequency_dict = {}
 
-    for char in str:
+    for char in string:
         if char in frequency_dict:
             frequency_dict[char] += 1
         else:
@@ -31,12 +35,17 @@ def huffman_encoding(str):
     # 5. traverse from root
     dict_char_code = encodeTree(final_node)
     encoded_string = ''
-    for char in str:
+    for char in string:
         encoded_string += dict_char_code[char]
     return (encoded_string, final_node)
 
 
 def huffman_decoding(data, tree):
+    if type(data) != str or len(data) == 0:
+        raise Exception("Provide String with length > 0")
+    if type(tree) != dict:
+        raise TypeError("Provide a tree with Dict type")
+
     decoded_string = ''
     current_node = tree
 
@@ -64,23 +73,43 @@ def huffman_decoding(data, tree):
     return decoded_string
 
 
+# Unit test
+class Testing(unittest.TestCase):
+
+    def testSentence(self):
+        a_great_sentence = "The bird is the word"
+        encoded_data, tree = huffman_encoding(a_great_sentence)
+        decoded_data = huffman_decoding(encoded_data, tree)
+
+        print("The size of the data is: {}\n".format(
+            sys.getsizeof(a_great_sentence)))
+        print("The content of the data is: {}\n".format(a_great_sentence))
+
+        print("The size of the encoded data is: {}\n".format(
+            sys.getsizeof(int(encoded_data, base=2))))
+        print("The content of the encoded data is: {}\n".format(encoded_data))
+
+        print("The size of the decoded data is: {}\n".format(
+            sys.getsizeof(decoded_data)))
+        print("The content of the encoded data is: {}\n".format(decoded_data))
+
+        self.assertEqual(decoded_data, a_great_sentence)
+
+    def testVeryLongSentence(self):
+        text = """“In the loveliest town of all, where the houses were white and high and the elms trees were green and higher than the houses, where the front yards were wide and pleasant and the back yards were bushy and worth finding out about, where the streets sloped down to the stream and the stream flowed quietly under the bridge, where the lawns ended in orchards and the orchards ended in fields and the fields ended in pastures and the pastures climbed the hill and disappeared over the top toward the wonderful wide sky, in this loveliest of all towns Stuart stopped to get a drink of sarsaparilla.”"""
+        encoded_data, tree = huffman_encoding(text)
+        decoded_data = huffman_decoding(encoded_data, tree)
+
+        self.assertEqual(decoded_data, text)
+
+    def testEmptyString(self):
+        data = ''
+        with self.assertRaises(Exception):
+            encoded_data, tree = huffman_encoding(data)
+
+        with self.assertRaises(Exception):
+            decoded_data = huffman_decoding(data, 'should be dict')
+
+
 if __name__ == "__main__":
-    codes = {}
-
-    a_great_sentence = "The bird is the word"
-
-    print("The size of the data is: {}\n".format(
-        sys.getsizeof(a_great_sentence)))
-    print("The content of the data is: {}\n".format(a_great_sentence))
-
-    encoded_data, tree = huffman_encoding(a_great_sentence)
-
-    print("The size of the encoded data is: {}\n".format(
-        sys.getsizeof(int(encoded_data, base=2))))
-    print("The content of the encoded data is: {}\n".format(encoded_data))
-
-    decoded_data = huffman_decoding(encoded_data, tree)
-
-    print("The size of the decoded data is: {}\n".format(
-        sys.getsizeof(decoded_data)))
-    print("The content of the encoded data is: {}\n".format(decoded_data))
+    unittest.main()

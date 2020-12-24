@@ -1,6 +1,5 @@
 import os
-
-answer = []
+import unittest
 
 
 def find_files(suffix, path):
@@ -19,19 +18,43 @@ def find_files(suffix, path):
     Returns:
        a list of paths
     """
+    answer = []
 
-    children_paths = os.listdir(path)
-    for child_path in children_paths:
-        next_path = path + '/' + child_path
+    def recursive_find(suffix, path):
+        children_paths = os.listdir(path)
+        for child_path in children_paths:
+            next_path = path + '/' + child_path
 
-        # if path is not a file, run find_files(path)
-        if not os.path.isfile(next_path):
-            find_files(suffix, next_path)
-        elif next_path.endswith(suffix):
-            answer.append(next_path)
-    return None
+            # if path is not a file, run find_files(path)
+            if not os.path.isfile(next_path):
+                recursive_find(suffix, next_path)
+            elif next_path.endswith(suffix):
+                answer.append(next_path)
+
+    recursive_find(suffix, path)
+    if len(answer) == 0:
+        return None
+    else:
+        return answer
 
 
-# sample test code
-find_files('', "./testdir")
-print(answer)
+class Testing(unittest.TestCase):
+
+    def testFindEmptyFile(self):
+        answer = 10  # there are 10 files
+        files = find_files('', './testdir')
+        self.assertEqual(answer, len(files))
+
+    def testFindCfile(self):
+        answer = 4  # there are 4 files end with .c
+        files = find_files('.c', './testdir')
+        self.assertEqual(answer, len(files))
+
+    def testsearchEmptyPathWillRaiseException(self):
+        answer = 4  # there are 4 files end with .c
+        with self.assertRaises(FileNotFoundError):
+            files = find_files('.c', '')
+
+
+if __name__ == "__main__":
+    unittest.main()
