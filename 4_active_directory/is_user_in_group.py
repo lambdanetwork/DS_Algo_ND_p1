@@ -15,19 +15,5 @@ def is_user_in_group(user, group):
     if not isinstance(group, Group):
         raise Exception("Provide a group object on second argument")
 
-    answer = False
-    answer = loopSearch(user, group)
-    return answer
-
-
-def loopSearch(user, group):
-    # check if user is inside group.user
-    if user in group.get_users():
-        return True
-    # if group has no sub_groups, return False
-    elif len(group.get_groups()) == 0:
-        return False
-    else:
-       # walk through all the groups
-        for g in group.get_groups():
-            return loopSearch(user, g)
+    # rewrite this solution based on feedback from reviewer
+    return user in group.get_users() or any(is_user_in_group(user, sub_group) for sub_group in group.get_groups())
